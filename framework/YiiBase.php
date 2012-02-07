@@ -215,6 +215,8 @@ class YiiBase
 	 */
 	public static function createComponent($config)
 	{
+		
+		//可以是一个配置类名，或配置数组
 		if(is_string($config))
 		{
 			$type=$config;
@@ -296,10 +298,11 @@ class YiiBase
 	 * @return string the class name or the directory that this alias refers to
 	 * @throws CException if the alias is invalid
 	 * 导入指定的CLASS
+	 * 此方法只建立和类对应的文件位置数组，方便自动加载方法的使用，只加载一次类文件，更加高效
 	 */
 	public static function import($alias,$forceInclude=false)
 	{
-		//
+		//是否已经导入过类
 		if(isset(self::$_imports[$alias]))  // previously imported
 			return self::$_imports[$alias];
 
@@ -309,15 +312,22 @@ class YiiBase
 			return self::$_imports[$alias]=$alias;
 
 
-		//判断是否使用 \\ 格式加载类, strrpos 找到最后一个出现 \\ 的位置
+		//判断是否使用 \\ 方式加载类, strrpos 找到最后一个出现 \\ 的位置
 		if(($pos=strrpos($alias,'\\'))!==false) // a class name in PHP 5.3 namespace format
 		{
 			
-			//
+			//ltrim 去掉左边开始部分的空白，或指定的字符
+			//去掉最后一个\\及其后面部分
+			//把\\替换成.
 			$namespace=str_replace('\\','.',ltrim(substr($alias,0,$pos),'\\'));
+			
+			//把路径别名替换成目录 如：sys = dirname(__PAHT__) = PATH_ROOT
 			if(($path=self::getPathOfAlias($namespace))!==false)
 			{
+				//构造类文件路径
 				$classFile=$path.DIRECTORY_SEPARATOR.substr($alias,$pos+1).'.php';
+				
+				//如果 forceInclude 为 false 时，将在引用一个类时才包含
 				if($forceInclude)
 				{
 					if(is_file($classFile))
@@ -335,19 +345,27 @@ class YiiBase
 					array('{alias}'=>$namespace)));
 		}
 
+
+		//如果只是一个简单的类名，将直接返回
 		if( ($pos=strrpos($alias,'.'))===false )  // a simple class name
 		{
 			if($forceInclude && self::autoload($alias))
 				self::$_imports[$alias]=$alias;
 			return $alias;
 		}
+		
+		
+		//注意这里用了上个 $pos 位置偏移量
 
+		//支持用*导入整个目录的文件
 		$className=(string)substr($alias,$pos+1);
-		$isClass=$className!=='*';
+		$isClass=$className!=='*'; //是否为 *
 
 		if($isClass && (class_exists($className,false) || interface_exists($className,false)))
 			return self::$_imports[$alias]=$className;
 
+
+		
 		if(($path=self::getPathOfAlias($alias))!==false)
 		{
 			if($isClass)

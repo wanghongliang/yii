@@ -657,6 +657,8 @@ class CUrlRule extends CBaseUrlRule
 	 */
 	public function __construct($route,$pattern)
 	{
+		
+		//route 定义匹配后路由变量 
 		if(is_array($route))
 		{
 			foreach(array('urlSuffix', 'caseSensitive', 'defaultParams', 'matchValue', 'verb', 'parsingOnly') as $name)
@@ -668,45 +670,72 @@ class CUrlRule extends CBaseUrlRule
 				$pattern=$route['pattern'];
 			$route=$route[0];
 		}
+		
+		//去掉 后缀 /
 		$this->route=trim($route,'/');
 
-		$tr2['/']=$tr['/']='\\/';
 
+		//定义正则表达式转换数组
+		$tr2['/']=$tr['/']='\\/';
+		
+		
+		//route 是否定义了引用 <controller>/<action>
 		if(strpos($route,'<')!==false && preg_match_all('/<(\w+)>/',$route,$matches2))
 		{
+			//生成引用数组
 			foreach($matches2[1] as $name)
 				$this->references[$name]="<$name>";
 		}
-
+		
+		
+		//比转字符串是否相等,这里定义是否为 http或https 
 		$this->hasHostInfo=!strncasecmp($pattern,'http://',7) || !strncasecmp($pattern,'https://',8);
 
-		if($this->verb!==null)
+		if($this->verb!==null)  //preg_split 取得搜索字符串的成分
 			$this->verb=preg_split('/[\s,]+/',strtoupper($this->verb),-1,PREG_SPLIT_NO_EMPTY);
 
+		//匹配url配置信息中的 pattern
 		if(preg_match_all('/<(\w+):?(.*?)?>/',$pattern,$matches))
-		{
+		{	
+			//生成数组
 			$tokens=array_combine($matches[1],$matches[2]);
+			
+			//$name 是 :前的字符串 $value 是:后面的正则表达式
 			foreach($tokens as $name=>$value)
 			{
+				
+				//如果正则表达式为空，定义不为 \/的所有字符串
 				if($value==='')
 					$value='[^\/]+';
-				$tr["<$name>"]="(?P<$name>$value)";
-				if(isset($this->references[$name]))
-					$tr2["<$name>"]=$tr["<$name>"];
+				$tr["<$name>"]="(?P<$name>$value)"; //定义$tr数组
+				if(isset($this->references[$name])) //
+					$tr2["<$name>"]=$tr["<$name>"]; //定义 $tr2数组
 				else
-					$this->params[$name]=$value;
+					$this->params[$name]=$value;  //定义 $this->params
 			}
 		}
+		
+		//去掉 *
 		$p=rtrim($pattern,'*');
-		$this->append=$p!==$pattern;
-		$p=trim($p,'/');
+		$this->append = ( $p!==$pattern ); //
+		
+		//去掉了 /*
+		$p=trim($p,'/');  
+		
+		//把 $pattern 换成 <controller>
 		$this->template=preg_replace('/<(\w+):?.*?>/','<$1>',$p);
+		
+		//把 pattern 编译成 /^(?p<controller>[^\/]+)(?p<action>[^\/]+))
 		$this->pattern='/^'.strtr($this->template,$tr).'\/';
+		
+		//是否有 * ,有* 就不加$
 		if($this->append)
 			$this->pattern.='/u';
 		else
 			$this->pattern.='$/u';
-
+		
+		
+		//把有引用的<controller>转成<$1>
 		if($this->references!==array())
 			$this->routePattern='/^'.strtr($this->route,$tr2).'$/u';
 
@@ -811,14 +840,19 @@ class CUrlRule extends CBaseUrlRule
 	 */
 	public function parseUrl($manager,$request,$pathInfo,$rawPathInfo)
 	{
+		
+		//$this->verb 定义忽略分析请求的方式
 		if($this->verb!==null && !in_array($request->getRequestType(), $this->verb, true))
 			return false;
-
+		
+		
+		//是否区分大小写
 		if($manager->caseSensitive && $this->caseSensitive===null || $this->caseSensitive)
 			$case='';
 		else
 			$case='i';
 
+		//后缀去掉
 		if($this->urlSuffix!==null)
 			$pathInfo=$manager->removeUrlSuffix($rawPathInfo,$this->urlSuffix);
 
@@ -829,7 +863,7 @@ class CUrlRule extends CBaseUrlRule
 			if($urlSuffix!='' && $urlSuffix!=='/')
 				return false;
 		}
-
+		
 		if($this->hasHostInfo)
 			$pathInfo=strtolower($request->getHostInfo()).rtrim('/'.$pathInfo,'/');
 
