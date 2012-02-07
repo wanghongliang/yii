@@ -855,10 +855,12 @@ class CUrlRule extends CBaseUrlRule
 		//后缀去掉
 		if($this->urlSuffix!==null)
 			$pathInfo=$manager->removeUrlSuffix($rawPathInfo,$this->urlSuffix);
-
+		
+		//是否启用严格的URL解析,不匹配后缀，返回false
 		// URL suffix required, but not found in the requested URL
 		if($manager->useStrictParsing && $pathInfo===$rawPathInfo)
 		{
+			//有后缀但没有匹配成功，返回false
 			$urlSuffix=$this->urlSuffix===null ? $manager->urlSuffix : $this->urlSuffix;
 			if($urlSuffix!='' && $urlSuffix!=='/')
 				return false;
