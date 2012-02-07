@@ -5,5 +5,3 @@ require_once(dirname(__FILE__).'/../../framework/yii.php');
 
 // create a Web application instance and run
 Yii::createWebApplication()->run();
-
-//运行完成

@@ -356,17 +356,31 @@ class CUrlManager extends CApplicationComponent
 	 */
 	public function parseUrl($request)
 	{
+		
+		//定义两种路由方式，一种是 path /article/list ,另一种是 &com=article&act=list 
 		if($this->getUrlFormat()===self::PATH_FORMAT)
 		{
+			
+			//获取url pathinfo信息,便于分析url
 			$rawPathInfo=$request->getPathInfo();
+			
+			
+			//移除url后缀字符串,如: .html
 			$pathInfo=$this->removeUrlSuffix($rawPathInfo,$this->urlSuffix);
+			
+			
+			//匹配定义的url规则
 			foreach($this->_rules as $i=>$rule)
 			{
+				//数组配置信息
 				if(is_array($rule))
 					$this->_rules[$i]=$rule=Yii::createComponent($rule);
+					
 				if(($r=$rule->parseUrl($this,$request,$pathInfo,$rawPathInfo))!==false)
 					return isset($_GET[$this->routeVar]) ? $_GET[$this->routeVar] : $r;
 			}
+			
+			//是否进行404报错
 			if($this->useStrictParsing)
 				throw new CHttpException(404,Yii::t('yii','Unable to resolve the request "{route}".',
 					array('{route}'=>$pathInfo)));
@@ -643,8 +657,6 @@ class CUrlRule extends CBaseUrlRule
 	 */
 	public function __construct($route,$pattern)
 	{
-
-		//可以用数组形式配置，route参数
 		if(is_array($route))
 		{
 			foreach(array('urlSuffix', 'caseSensitive', 'defaultParams', 'matchValue', 'verb', 'parsingOnly') as $name)
@@ -660,16 +672,12 @@ class CUrlRule extends CBaseUrlRule
 
 		$tr2['/']=$tr['/']='\\/';
 
-
-		//找出<>中的KEY
 		if(strpos($route,'<')!==false && preg_match_all('/<(\w+)>/',$route,$matches2))
 		{
 			foreach($matches2[1] as $name)
 				$this->references[$name]="<$name>";
 		}
-		
 
-		//strncasecmp 比较两个字符串，是否为https 划为 http 前缀
 		$this->hasHostInfo=!strncasecmp($pattern,'http://',7) || !strncasecmp($pattern,'https://',8);
 
 		if($this->verb!==null)
@@ -700,7 +708,7 @@ class CUrlRule extends CBaseUrlRule
 			$this->pattern.='$/u';
 
 		if($this->references!==array())
-			$this->routePattern='/^'.strtr($this->route,$tr2).'$/u'; //strtr 替换字符
+			$this->routePattern='/^'.strtr($this->route,$tr2).'$/u';
 
 		if(YII_DEBUG && @preg_match($this->pattern,'test')===false)
 			throw new CException(Yii::t('yii','The URL pattern "{pattern}" for route "{route}" is not a valid regular expression.',
