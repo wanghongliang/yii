@@ -1,5 +1,16 @@
 <?php
 /**
+2012-02-11
+说明：
+URL管理类是工厂类，根据配置信息管理和创建rule，
+然后根据 request对象和rule对象匹配，然后根据 rule 对象的规则进行解析 url ，生成GET参数
+
+1，解析 url 信息,根据匹配的 rule 规则进行解析，生成GET参数.
+2, 生成 url 信息,根据区配的 rule 规则把参数变量替换到 route 规则中去，并把附加的参数按配置方式，追加到URL后面,并生成后缀信息.
+
+
+**/
+/**
  * CUrlManager class file
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
