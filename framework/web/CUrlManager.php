@@ -717,7 +717,7 @@ class CUrlRule extends CBaseUrlRule
 		
 		//去掉 *
 		$p=rtrim($pattern,'*');
-		$this->append = ( $p!==$pattern ); //
+		$this->append = ( $p!==$pattern ); //当后面有 * 点时，就以目录结构追加URL参数
 		
 		//去掉了 /*
 		$p=trim($p,'/');  
@@ -737,7 +737,7 @@ class CUrlRule extends CBaseUrlRule
 		
 		//把有引用的<controller>转成<$1>
 		if($this->references!==array())
-			$this->routePattern='/^'.strtr($this->route,$tr2).'$/u';
+			$this->routePattern='/^'.strtr($this->route,$tr2).'$/u';  //把类似于<controller>/<action> 替换成正则
 
 		if(YII_DEBUG && @preg_match($this->pattern,'test')===false)
 			throw new CException(Yii::t('yii','The URL pattern "{pattern}" for route "{route}" is not a valid regular expression.',
@@ -754,7 +754,7 @@ class CUrlRule extends CBaseUrlRule
 	 */
 	public function createUrl($manager,$route,$params,$ampersand)
 	{
-		if($this->parsingOnly)
+		if( $this->parsingOnly )
 			return false;
 
 		if($manager->caseSensitive && $this->caseSensitive===null || $this->caseSensitive)
@@ -763,6 +763,8 @@ class CUrlRule extends CBaseUrlRule
 			$case='i';
 
 		$tr=array();
+		
+		//是否是当前已匹配的route，如果不是，分析是否和当前 rule对象匹配，匹配的话将生成对应的URL
 		if($route!==$this->route)
 		{
 			if($this->routePattern!==null && preg_match($this->routePattern.$case,$route,$matches))
@@ -774,6 +776,8 @@ class CUrlRule extends CBaseUrlRule
 				return false;
 		}
 
+
+		//对比默认参数和传值参数中有相同键和值的，全部清空
 		foreach($this->defaultParams as $key=>$value)
 		{
 			if(isset($params[$key]))
@@ -785,6 +789,7 @@ class CUrlRule extends CBaseUrlRule
 			}
 		}
 
+		//清空对象中的params,和参数中的params对比，不存在则清除
 		foreach($this->params as $key=>$value)
 			if(!isset($params[$key]))
 				return false;
@@ -797,17 +802,23 @@ class CUrlRule extends CBaseUrlRule
 					return false;
 			}
 		}
-
+		
+		
+		//对象中的参数
 		foreach($this->params as $key=>$value)
 		{
 			$tr["<$key>"]=urlencode($params[$key]);
 			unset($params[$key]);
 		}
 
+		//后缀
 		$suffix=$this->urlSuffix===null ? $manager->urlSuffix : $this->urlSuffix;
 
+		//把模板转为/post/list
 		$url=strtr($this->template,$tr);
-
+		
+		
+		//是否有主机信息,对比当前转化的url和主机信息是否相同
 		if($this->hasHostInfo)
 		{
 			$hostInfo=Yii::app()->getRequest()->getHostInfo();
@@ -815,9 +826,11 @@ class CUrlRule extends CBaseUrlRule
 				$url=substr($url,strlen($hostInfo));
 		}
 
+		//参数是否已转化成功
 		if(empty($params))
 			return $url!=='' ? $url.$suffix : $url;
-
+		
+		//还有参数，将继续转换
 		if($this->append)
 			$url.='/'.$manager->createPathInfo($params,'/','/').$suffix;
 		else
