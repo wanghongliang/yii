@@ -125,6 +125,8 @@ class YiiBase
 	 */
 	public static function createWebApplication($config=null)
 	{
+		
+		
 		return self::createApplication('CWebApplication',$config);
 	}
 

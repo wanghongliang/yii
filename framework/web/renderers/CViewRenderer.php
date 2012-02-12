@@ -83,6 +83,7 @@ abstract class CViewRenderer extends CApplicationComponent implements IViewRende
 	 */
 	protected function getViewFile($file)
 	{
+		//是否按目录储存结果
 		if($this->useRuntimePath)
 		{
 			$crc=sprintf('%x', crc32(get_class($this).Yii::getVersion().dirname($file)));
