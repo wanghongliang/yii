@@ -14,15 +14,56 @@
  * CWebApplication manages the controllers in MVC pattern, and provides the following additional
  * core application components:
  * <ul>
- * <li>{@link urlManager}: provides URL parsing and constructing functionality;</li>
- * <li>{@link request}: encapsulates the Web request information;</li>
- * <li>{@link session}: provides the session-related functionalities;</li>
- * <li>{@link assetManager}: manages the publishing of private asset files.</li>
- * <li>{@link user}: represents the user session information.</li>
- * <li>{@link themeManager}: manages themes.</li>
- * <li>{@link authManager}: manages role-based access control (RBAC).</li>
- * <li>{@link clientScript}: manages client scripts (javascripts and CSS).</li>
- * <li>{@link widgetFactory}: creates widgets and supports widget skinning.</li>
+ * <li>
+ * 提供一个URL分析和构造方法
+ * {@link urlManager}: provides URL parsing and constructing functionality;
+ * </li>
+ * <li>
+ * WEB请求信息
+ * {@link request}: encapsulates the Web request information;
+ * </li>
+ * 
+ * <li>
+ * SESSION相关的方法
+ * {@link session}: provides the session-related functionalities;
+ * </li>
+ * 
+ * <li>
+ * 
+ * {@link assetManager}: manages the publishing of private asset files.
+ * </li>
+ * 
+ * 
+ * <li>
+ * 用户信息
+ * {@link user}: represents the user session information.
+ * </li>
+ * 
+ * 
+ * <li>
+ * 模板管理
+ * {@link themeManager}: manages themes.
+ * </li>
+ * 
+ * 
+ * <li>
+ * 权限控制管理
+ * {@link authManager}: manages role-based access control (RBAC).
+ * </li>
+ * 
+ * 
+ * <li>
+ * 脚本和样式管理
+ * {@link clientScript}: manages client scripts (javascripts and CSS).
+ * </li>
+ * 
+ * 
+ * <li>
+ * 小部件工厂
+ * {@link widgetFactory}: creates widgets and supports widget skinning.
+ * </li>
+ * 
+ * 
  * </ul>
  *
  * User requests are resolved as controller-action pairs and additional parameters.
@@ -465,7 +506,7 @@ class CWebApplication extends CApplication
 		if($this->_layoutPath!==null)
 			return $this->_layoutPath;
 		else
-			return $this->_layoutPath=$this->getViewPath().DIRECTORY_SEPARATOR.'layouts';
+			retsurn $this->_layoutPath=$this->getViewPath().DIRECTORY_SEPARATOR.'layouts';
 	}
 
 	/**

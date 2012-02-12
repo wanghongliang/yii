@@ -120,11 +120,16 @@ abstract class CApplication extends CModule
 	 */
 	public function __construct($config=null)
 	{
+		//设置主应用程序
 		Yii::setApplication($this);
 
 		// set basePath at early as possible to avoid trouble
+		
+		//如果是一个配置文件路径，就加载配置文件
 		if(is_string($config))
 			$config=require($config);
+			
+		//设置配置文件
 		if(isset($config['basePath']))
 		{
 			$this->setBasePath($config['basePath']);

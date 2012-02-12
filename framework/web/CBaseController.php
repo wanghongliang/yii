@@ -94,7 +94,7 @@ abstract class CBaseController extends CComponent
 			$content=$renderer->renderFile($this,$viewFile,$data,$return);
 		else
 			$content=$this->renderInternal($viewFile,$data,$return);
-		if(count($this->_widgetStack)===$widgetCount)
+		if( count($this->_widgetStack)===$widgetCount )
 			return $content;
 		else
 		{

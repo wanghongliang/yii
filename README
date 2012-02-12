@@ -1,8 +1,11 @@
 Yii Web Programming Framework
+
+本程序是学习框架结构
 =============================
 
 Thank you for choosing Yii - a high-performance component-based PHP framework.
 
+谢谢你选择yii,一个高性能，基于组件的PHP框架.
 
 INSTALLATION
 ------------
@@ -19,7 +22,9 @@ directory. You shall see the following files and directories:
       UPGRADE              upgrading instructions
 
 
-REQUIREMENTS
+REQUIREMENTS 
+
+要求
 ------------
 
 The minimum requirement by Yii is that your Web server supports

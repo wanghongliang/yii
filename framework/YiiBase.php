@@ -13,36 +13,45 @@
 
 /**
  * Gets the application start timestamp.
+ * 首先定义应用程序启动的时间戳
  */
 defined('YII_BEGIN_TIME') or define('YII_BEGIN_TIME',microtime(true));
 /**
  * This constant defines whether the application should be in debug mode or not. Defaults to false.
+ * 定义当前应用程序是否为调试模式
  */
 defined('YII_DEBUG') or define('YII_DEBUG',false);
+
 /**
  * This constant defines how much call stack information (file name and line number) should be logged by Yii::trace().
  * Defaults to 0, meaning no backtrace information. If it is greater than 0,
  * at most that number of call stacks will be logged. Note, only user application call stacks are considered.
+ * 定义日志信息的跟踪等级
  */
 defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',0);
 /**
  * This constant defines whether exception handling should be enabled. Defaults to true.
+ * 定义异常处理程序会不会处理
  */
 defined('YII_ENABLE_EXCEPTION_HANDLER') or define('YII_ENABLE_EXCEPTION_HANDLER',true);
 /**
  * This constant defines whether error handling should be enabled. Defaults to true.
+ * 定义错误处理程序会不会开启
  */
 defined('YII_ENABLE_ERROR_HANDLER') or define('YII_ENABLE_ERROR_HANDLER',true);
 /**
  * Defines the Yii framework installation path.
+ * Yii框架的目录
  */
 defined('YII_PATH') or define('YII_PATH',dirname(__FILE__));
 /**
  * Defines the Zii library installation path.
+ * YII库的目录
  */
 defined('YII_ZII_PATH') or define('YII_ZII_PATH',YII_PATH.DIRECTORY_SEPARATOR.'zii');
 
 /**
+ * YiiBase 是一个常用的函数库
  * YiiBase is a helper class serving common framework functionalities.
  *
  * Do not use YiiBase directly. Instead, use its child class {@link Yii} where
@@ -59,18 +68,35 @@ class YiiBase
 	 * @var array class map used by the Yii autoloading mechanism.
 	 * The array keys are the class names and the array values are the corresponding class file paths.
 	 * @since 1.1.5
+	 * 自动加载的类数组，KEY是类名，VALUE是类文件路径
 	 */
 	public static $classMap=array();
+	
+	
 	/**
 	 * @var boolean whether to rely on PHP include path to autoload class files. Defaults to true.
 	 * You may set this to be false if your hosting environment doesn't allow changing PHP include path,
 	 * or if you want to append additional autoloaders to the default Yii autoloader.
 	 * @since 1.1.8
+	 * 是否开启PHP自动加载类方式，开启的话，奖自动执行Yii装载类加载类文件
 	 */
 	public static $enableIncludePath=true;
 
+
+	/**
+	 * 装载类的目录
+	 */
 	private static $_aliases=array('system'=>YII_PATH,'zii'=>YII_ZII_PATH); // alias => path
+	
+	
+	/**
+	 * 类名或目录
+	 */
 	private static $_imports=array();					// alias => class name or directory
+	
+	/**
+	 * 包含的路径列表
+	 */
 	private static $_includePaths;						// list of include paths
 	private static $_app;
 	private static $_logger;
@@ -79,6 +105,7 @@ class YiiBase
 
 	/**
 	 * @return string the version of Yii framework
+	 * 返回Yii框架的版本号
 	 */
 	public static function getVersion()
 	{
@@ -94,6 +121,7 @@ class YiiBase
 	 * which should point to the directory containing all application logic, template and data.
 	 * If not, the directory will be defaulted to 'protected'.
 	 * @return CWebApplication
+	 * 创建一个web应用实例,参数为配置信息
 	 */
 	public static function createWebApplication($config=null)
 	{
@@ -109,6 +137,7 @@ class YiiBase
 	 * which should point to the directory containing all application logic, template and data.
 	 * If not, the directory will be defaulted to 'protected'.
 	 * @return CConsoleApplication
+	 * 创建一个控制台应用程序
 	 */
 	public static function createConsoleApplication($config=null)
 	{
@@ -121,6 +150,7 @@ class YiiBase
 	 * @param mixed $config application configuration. This parameter will be passed as the parameter
 	 * to the constructor of the application class.
 	 * @return mixed the application instance
+	 * 创建一个指定的类
 	 */
 	public static function createApplication($class,$config=null)
 	{
@@ -148,6 +178,7 @@ class YiiBase
 	 */
 	public static function setApplication($app)
 	{
+		//当前执行环境，只能允许一个主要应用执行
 		if(self::$_app===null || $app===null)
 			self::$_app=$app;
 		else
@@ -156,6 +187,7 @@ class YiiBase
 
 	/**
 	 * @return string the path of the framework
+	 * 框架的目录
 	 */
 	public static function getFrameworkPath()
 	{
@@ -178,9 +210,13 @@ class YiiBase
 	 * @param mixed $config the configuration. It can be either a string or an array.
 	 * @return mixed the created object
 	 * @throws CException if the configuration does not have a 'class' element.
+	 * 通过配置信息，创新组件对象
+	 * 
 	 */
 	public static function createComponent($config)
 	{
+		
+		//可以是一个配置类名，或配置数组
 		if(is_string($config))
 		{
 			$type=$config;
@@ -261,21 +297,37 @@ class YiiBase
 	 * the path alias refers to a class.
 	 * @return string the class name or the directory that this alias refers to
 	 * @throws CException if the alias is invalid
+	 * 导入指定的CLASS
+	 * 此方法只建立和类对应的文件位置数组，方便自动加载方法的使用，只加载一次类文件，更加高效
 	 */
 	public static function import($alias,$forceInclude=false)
 	{
+		//是否已经导入过类
 		if(isset(self::$_imports[$alias]))  // previously imported
 			return self::$_imports[$alias];
 
+		//class_exists 方法默认调用 __autoload ,加 false 参数，将不自动调用__autoload方法
+		//如果加载了指定的类，将直接设置导入数组
 		if(class_exists($alias,false) || interface_exists($alias,false))
 			return self::$_imports[$alias]=$alias;
 
+
+		//判断是否使用 \\ 方式加载类, strrpos 找到最后一个出现 \\ 的位置
 		if(($pos=strrpos($alias,'\\'))!==false) // a class name in PHP 5.3 namespace format
 		{
+			
+			//ltrim 去掉左边开始部分的空白，或指定的字符
+			//去掉最后一个\\及其后面部分
+			//把\\替换成.
 			$namespace=str_replace('\\','.',ltrim(substr($alias,0,$pos),'\\'));
+			
+			//把路径别名替换成目录 如：sys = dirname(__PAHT__) = PATH_ROOT
 			if(($path=self::getPathOfAlias($namespace))!==false)
 			{
+				//构造类文件路径
 				$classFile=$path.DIRECTORY_SEPARATOR.substr($alias,$pos+1).'.php';
+				
+				//如果 forceInclude 为 false 时，将在引用一个类时才包含
 				if($forceInclude)
 				{
 					if(is_file($classFile))
@@ -293,19 +345,27 @@ class YiiBase
 					array('{alias}'=>$namespace)));
 		}
 
-		if(($pos=strrpos($alias,'.'))===false)  // a simple class name
+
+		//如果只是一个简单的类名，将直接返回
+		if( ($pos=strrpos($alias,'.'))===false )  // a simple class name
 		{
 			if($forceInclude && self::autoload($alias))
 				self::$_imports[$alias]=$alias;
 			return $alias;
 		}
+		
+		
+		//注意这里用了上个 $pos 位置偏移量
 
+		//支持用*导入整个目录的文件
 		$className=(string)substr($alias,$pos+1);
-		$isClass=$className!=='*';
+		$isClass=$className!=='*'; //是否为 *
 
 		if($isClass && (class_exists($className,false) || interface_exists($className,false)))
 			return self::$_imports[$alias]=$className;
 
+
+		
 		if(($path=self::getPathOfAlias($alias))!==false)
 		{
 			if($isClass)

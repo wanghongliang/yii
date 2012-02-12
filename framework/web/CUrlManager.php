@@ -1,5 +1,16 @@
 <?php
 /**
+2012-02-11
+说明：
+URL管理类是工厂类，根据配置信息管理和创建rule，
+然后根据 request对象和rule对象匹配，然后根据 rule 对象的规则进行解析 url ，生成GET参数
+
+1，解析 url 信息,根据匹配的 rule 规则进行解析，生成GET参数.
+2, 生成 url 信息,根据区配的 rule 规则把参数变量替换到 route 规则中去，并把附加的参数按配置方式，追加到URL后面,并生成后缀信息.
+
+
+**/
+/**
  * CUrlManager class file
  *
  * @author Qiang Xue <qiang.xue@gmail.com>
@@ -356,17 +367,31 @@ class CUrlManager extends CApplicationComponent
 	 */
 	public function parseUrl($request)
 	{
+		
+		//定义两种路由方式，一种是 path /article/list ,另一种是 &com=article&act=list 
 		if($this->getUrlFormat()===self::PATH_FORMAT)
 		{
+			
+			//获取url pathinfo信息,便于分析url
 			$rawPathInfo=$request->getPathInfo();
+			
+			
+			//移除url后缀字符串,如: .html
 			$pathInfo=$this->removeUrlSuffix($rawPathInfo,$this->urlSuffix);
+			
+			
+			//匹配定义的url规则
 			foreach($this->_rules as $i=>$rule)
 			{
+				//数组配置信息
 				if(is_array($rule))
 					$this->_rules[$i]=$rule=Yii::createComponent($rule);
+					
 				if(($r=$rule->parseUrl($this,$request,$pathInfo,$rawPathInfo))!==false)
 					return isset($_GET[$this->routeVar]) ? $_GET[$this->routeVar] : $r;
 			}
+			
+			//是否进行404报错
 			if($this->useStrictParsing)
 				throw new CHttpException(404,Yii::t('yii','Unable to resolve the request "{route}".',
 					array('{route}'=>$pathInfo)));
@@ -643,8 +668,8 @@ class CUrlRule extends CBaseUrlRule
 	 */
 	public function __construct($route,$pattern)
 	{
-
-		//可以用数组形式配置，route参数
+		
+		//route 定义匹配后路由变量 
 		if(is_array($route))
 		{
 			foreach(array('urlSuffix', 'caseSensitive', 'defaultParams', 'matchValue', 'verb', 'parsingOnly') as $name)
@@ -656,51 +681,74 @@ class CUrlRule extends CBaseUrlRule
 				$pattern=$route['pattern'];
 			$route=$route[0];
 		}
+		
+		//去掉 后缀 /
 		$this->route=trim($route,'/');
 
+
+		//定义正则表达式转换数组
 		$tr2['/']=$tr['/']='\\/';
-
-
-		//找出<>中的KEY
+		
+		
+		//route 是否定义了引用 <controller>/<action>
 		if(strpos($route,'<')!==false && preg_match_all('/<(\w+)>/',$route,$matches2))
 		{
+			//生成引用数组
 			foreach($matches2[1] as $name)
 				$this->references[$name]="<$name>";
 		}
 		
-
-		//strncasecmp 比较两个字符串，是否为https 划为 http 前缀
+		
+		//比转字符串是否相等,这里定义是否为 http或https 
 		$this->hasHostInfo=!strncasecmp($pattern,'http://',7) || !strncasecmp($pattern,'https://',8);
 
-		if($this->verb!==null)
+		if($this->verb!==null)  //preg_split 取得搜索字符串的成分
 			$this->verb=preg_split('/[\s,]+/',strtoupper($this->verb),-1,PREG_SPLIT_NO_EMPTY);
 
+		//匹配url配置信息中的 pattern
 		if(preg_match_all('/<(\w+):?(.*?)?>/',$pattern,$matches))
-		{
+		{	
+			//生成数组
 			$tokens=array_combine($matches[1],$matches[2]);
+			
+			//$name 是 :前的字符串 $value 是:后面的正则表达式
 			foreach($tokens as $name=>$value)
 			{
+				
+				//如果正则表达式为空，定义不为 \/的所有字符串
 				if($value==='')
 					$value='[^\/]+';
-				$tr["<$name>"]="(?P<$name>$value)";
-				if(isset($this->references[$name]))
-					$tr2["<$name>"]=$tr["<$name>"];
+				$tr["<$name>"]="(?P<$name>$value)"; //定义$tr数组
+				if(isset($this->references[$name])) //
+					$tr2["<$name>"]=$tr["<$name>"]; //定义 $tr2数组
 				else
-					$this->params[$name]=$value;
+					$this->params[$name]=$value;  //定义 $this->params
 			}
 		}
+		
+		//去掉 *
 		$p=rtrim($pattern,'*');
-		$this->append=$p!==$pattern;
-		$p=trim($p,'/');
+		$this->append = ( $p!==$pattern ); //当后面有 * 点时，就以目录结构追加URL参数
+		
+		//去掉了 /*
+		$p=trim($p,'/');  
+		
+		//把 $pattern 换成 <controller>
 		$this->template=preg_replace('/<(\w+):?.*?>/','<$1>',$p);
+		
+		//把 pattern 编译成 /^(?p<controller>[^\/]+)(?p<action>[^\/]+))
 		$this->pattern='/^'.strtr($this->template,$tr).'\/';
+		
+		//是否有 * ,有* 就不加$
 		if($this->append)
 			$this->pattern.='/u';
 		else
 			$this->pattern.='$/u';
-
+		
+		
+		//把有引用的<controller>转成<$1>
 		if($this->references!==array())
-			$this->routePattern='/^'.strtr($this->route,$tr2).'$/u'; //strtr 替换字符
+			$this->routePattern='/^'.strtr($this->route,$tr2).'$/u';  //把类似于<controller>/<action> 替换成正则
 
 		if(YII_DEBUG && @preg_match($this->pattern,'test')===false)
 			throw new CException(Yii::t('yii','The URL pattern "{pattern}" for route "{route}" is not a valid regular expression.',
@@ -717,7 +765,7 @@ class CUrlRule extends CBaseUrlRule
 	 */
 	public function createUrl($manager,$route,$params,$ampersand)
 	{
-		if($this->parsingOnly)
+		if( $this->parsingOnly )
 			return false;
 
 		if($manager->caseSensitive && $this->caseSensitive===null || $this->caseSensitive)
@@ -726,6 +774,8 @@ class CUrlRule extends CBaseUrlRule
 			$case='i';
 
 		$tr=array();
+		
+		//是否是当前已匹配的route，如果不是，分析是否和当前 rule对象匹配，匹配的话将生成对应的URL
 		if($route!==$this->route)
 		{
 			if($this->routePattern!==null && preg_match($this->routePattern.$case,$route,$matches))
@@ -737,6 +787,8 @@ class CUrlRule extends CBaseUrlRule
 				return false;
 		}
 
+
+		//对比默认参数和传值参数中有相同键和值的，全部清空
 		foreach($this->defaultParams as $key=>$value)
 		{
 			if(isset($params[$key]))
@@ -748,6 +800,7 @@ class CUrlRule extends CBaseUrlRule
 			}
 		}
 
+		//清空对象中的params,和参数中的params对比，不存在则清除
 		foreach($this->params as $key=>$value)
 			if(!isset($params[$key]))
 				return false;
@@ -760,17 +813,23 @@ class CUrlRule extends CBaseUrlRule
 					return false;
 			}
 		}
-
+		
+		
+		//对象中的参数
 		foreach($this->params as $key=>$value)
 		{
 			$tr["<$key>"]=urlencode($params[$key]);
 			unset($params[$key]);
 		}
 
+		//后缀
 		$suffix=$this->urlSuffix===null ? $manager->urlSuffix : $this->urlSuffix;
 
+		//把模板转为/post/list
 		$url=strtr($this->template,$tr);
-
+		
+		
+		//是否有主机信息,对比当前转化的url和主机信息是否相同
 		if($this->hasHostInfo)
 		{
 			$hostInfo=Yii::app()->getRequest()->getHostInfo();
@@ -778,9 +837,11 @@ class CUrlRule extends CBaseUrlRule
 				$url=substr($url,strlen($hostInfo));
 		}
 
+		//参数是否已转化成功
 		if(empty($params))
 			return $url!=='' ? $url.$suffix : $url;
-
+		
+		//还有参数，将继续转换
 		if($this->append)
 			$url.='/'.$manager->createPathInfo($params,'/','/').$suffix;
 		else
@@ -803,25 +864,32 @@ class CUrlRule extends CBaseUrlRule
 	 */
 	public function parseUrl($manager,$request,$pathInfo,$rawPathInfo)
 	{
+		
+		//$this->verb 定义忽略分析请求的方式
 		if($this->verb!==null && !in_array($request->getRequestType(), $this->verb, true))
 			return false;
-
+		
+		
+		//是否区分大小写
 		if($manager->caseSensitive && $this->caseSensitive===null || $this->caseSensitive)
 			$case='';
 		else
 			$case='i';
 
+		//后缀去掉
 		if($this->urlSuffix!==null)
 			$pathInfo=$manager->removeUrlSuffix($rawPathInfo,$this->urlSuffix);
-
+		
+		//是否启用严格的URL解析,不匹配后缀，返回false
 		// URL suffix required, but not found in the requested URL
 		if($manager->useStrictParsing && $pathInfo===$rawPathInfo)
 		{
+			//有后缀但没有匹配成功，返回false
 			$urlSuffix=$this->urlSuffix===null ? $manager->urlSuffix : $this->urlSuffix;
 			if($urlSuffix!='' && $urlSuffix!=='/')
 				return false;
 		}
-
+		
 		if($this->hasHostInfo)
 			$pathInfo=strtolower($request->getHostInfo()).rtrim('/'.$pathInfo,'/');
 
