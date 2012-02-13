@@ -10,7 +10,7 @@
  * @package system
  * @since 1.0
  */
-
+date_default_timezone_set('UTC');
 require(dirname(__FILE__).'/YiiBase.php');
 
 /**
