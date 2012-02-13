@@ -506,7 +506,7 @@ class CWebApplication extends CApplication
 		if($this->_layoutPath!==null)
 			return $this->_layoutPath;
 		else
-			retsurn $this->_layoutPath=$this->getViewPath().DIRECTORY_SEPARATOR.'layouts';
+			return $this->_layoutPath=$this->getViewPath().DIRECTORY_SEPARATOR.'layouts';
 	}
 
 	/**
