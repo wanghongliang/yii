@@ -126,7 +126,7 @@ class YiiBase
 	public static function createWebApplication($config=null)
 	{
 		
-		
+		//用公用的方法创建 "运行实例",它可能是 web，也可能是 console
 		return self::createApplication('CWebApplication',$config);
 	}
 
@@ -156,6 +156,8 @@ class YiiBase
 	 */
 	public static function createApplication($class,$config=null)
 	{
+		 
+		//直接返回实例方法
 		return new $class($config);
 	}
 
@@ -454,6 +456,7 @@ class YiiBase
 	 */
 	public static function autoload($className)
 	{
+		 
 		// use include so that the error PHP file may appear
 		if(isset(self::$classMap[$className]))
 			include(self::$classMap[$className]);
@@ -464,6 +467,7 @@ class YiiBase
 			// include class file relying on include_path
 			if(strpos($className,'\\')===false)  // class without namespace
 			{
+				
 				if(self::$enableIncludePath===false)
 				{
 					foreach(self::$_includePaths as $path)
