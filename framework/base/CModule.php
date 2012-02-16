@@ -269,11 +269,14 @@ abstract class CModule extends CComponent
 	 */
 	public function getModule($id)
 	{
+		
 		if(isset($this->_modules[$id]) || array_key_exists($id,$this->_modules))
 			return $this->_modules[$id];
 		else if(isset($this->_moduleConfig[$id]))
 		{
 			$config=$this->_moduleConfig[$id];
+			
+			
 			if(!isset($config['enabled']) || $config['enabled'])
 			{
 				Yii::trace("Loading \"$id\" module",'system.base.CModule');

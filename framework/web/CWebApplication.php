@@ -356,12 +356,17 @@ class CWebApplication extends CApplication
 	 */
 	public function createController($route,$owner=null)
 	{
+		//应用对象
 		if($owner===null)
 			$owner=$this;
+			
+		//是否为首页网址
 		if(($route=trim($route,'/'))==='')
 			$route=$owner->defaultController;
+			
+		//是否支持大小写
 		$caseSensitive=$this->getUrlManager()->caseSensitive;
-
+		 
 		$route.='/';
 		while(($pos=strpos($route,'/'))!==false)
 		{
@@ -380,17 +385,26 @@ class CWebApplication extends CApplication
 						$this->parseActionParams($route),
 					);
 				}
-
+				 
+				 
 				if(($module=$owner->getModule($id))!==null)
 					return $this->createController($route,$module);
 
 				$basePath=$owner->getControllerPath();
 				$controllerID='';
+				
+				 
 			}
 			else
 				$controllerID.='/';
+				
+			//控制器类名
 			$className=ucfirst($id).'Controller';
+			
+			//控制器文件位置，注意这里的 $basePath.'/'.$id 是可以为子目录的
 			$classFile=$basePath.DIRECTORY_SEPARATOR.$className.'.php';
+			//echo $classFile;
+			
 			if(is_file($classFile))
 			{
 				if(!class_exists($className,false))
