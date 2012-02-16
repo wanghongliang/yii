@@ -162,17 +162,22 @@ class CWebApplication extends CApplication
 	 * Processes the current request.
 	 * It first resolves the request into controller and action,
 	 * and then creates the controller to perform the action.
+	 * parent::run() 调用本方法
 	 */
 	public function processRequest()
 	{
+		
+		//$catchAllRequest catch 捕捉所有请求，当站点关闭维护时使用
 		if(is_array($this->catchAllRequest) && isset($this->catchAllRequest[0]))
 		{
 			$route=$this->catchAllRequest[0];
 			foreach(array_splice($this->catchAllRequest,1) as $name=>$value)
 				$_GET[$name]=$value;
 		}
-		else
+		else //处理URL信息，并获取 $route
 			$route=$this->getUrlManager()->parseUrl($this->getRequest());
+			
+		//根据 route 参数，调用 controller 信息
 		$this->runController($route);
 	}
 
@@ -302,12 +307,14 @@ class CWebApplication extends CApplication
 	}
 
 	/**
-	 * Creates the controller and performs the specified action.
+	 * Creates the controller and performs the specified action. //performs 执行
 	 * @param string $route the route of the current request. See {@link createController} for more details.
 	 * @throws CHttpException if the controller could not be created.
 	 */
 	public function runController($route)
 	{
+		
+		//创建控制器，并执行初始化及run方法
 		if(($ca=$this->createController($route))!==null)
 		{
 			list($controller,$actionID)=$ca;
@@ -338,6 +345,10 @@ class CWebApplication extends CApplication
 	 * the corresponding controller. For example, if the route is "admin/user/create",
 	 * then the controller will be created using the class file "protected/controllers/admin/UserController.php".</li>
 	 * </ol>
+	 * 这里分三种情况创建 controller ：
+	 * 一，如果在 controllerMap 找到第一段，将会创建相应的控制器.
+	 * 二，如果找到的是一个 moduleID,相应的module会创建一个控制器.
+	 * 三，否则，会按照 route 的参数进行查找对应的 contrller
 	 * @param string $route the route of the request.
 	 * @param CWebModule $owner the module that the new controller will belong to. Defaults to null, meaning the application
 	 * instance is the owner.
