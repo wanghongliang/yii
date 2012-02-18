@@ -79,6 +79,7 @@ class YiiBase
 	 * or if you want to append additional autoloaders to the default Yii autoloader.
 	 * @since 1.1.8
 	 * 是否开启PHP自动加载类方式，开启的话，奖自动执行Yii装载类加载类文件
+	 * 是否是自动加载类的模式
 	 */
 	public static $enableIncludePath=true;
 
