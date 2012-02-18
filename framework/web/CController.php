@@ -258,7 +258,7 @@ class CController extends CBaseController
 	public function run($actionID)
 	{
 		if(($action=$this->createAction($actionID))!==null)
-		{
+		{ 
 			if(($parent=$this->getModule())===null)
 				$parent=Yii::app();
 			if($parent->beforeControllerAction($this,$action))

@@ -128,8 +128,11 @@ class CHttpRequest extends CApplicationComponent
 				$_COOKIE=$this->stripSlashes($_COOKIE);
 		}
 
+		
 		if($this->enableCsrfValidation)
 			Yii::app()->attachEventHandler('onBeginRequest',array($this,'validateCsrfToken'));
+			
+		
 	}
 
 
@@ -379,7 +382,8 @@ class CHttpRequest extends CApplicationComponent
 		if($this->_pathInfo===null)
 		{
 			$pathInfo=$this->getRequestUri();
-
+			
+			 
 			if(($pos=strpos($pathInfo,'?'))!==false)
 			   $pathInfo=substr($pathInfo,0,$pos);
 

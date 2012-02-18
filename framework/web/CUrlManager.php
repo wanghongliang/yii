@@ -368,6 +368,7 @@ class CUrlManager extends CApplicationComponent
 	public function parseUrl($request)
 	{
 		
+		
 		//定义两种路由方式，一种是 path /article/list ,另一种是 &com=article&act=list 
 		if($this->getUrlFormat()===self::PATH_FORMAT)
 		{

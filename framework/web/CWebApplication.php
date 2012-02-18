@@ -166,7 +166,6 @@ class CWebApplication extends CApplication
 	 */
 	public function processRequest()
 	{
-		
 		//$catchAllRequest catch 捕捉所有请求，当站点关闭维护时使用
 		if(is_array($this->catchAllRequest) && isset($this->catchAllRequest[0]))
 		{
@@ -176,7 +175,9 @@ class CWebApplication extends CApplication
 		}
 		else //处理URL信息，并获取 $route
 			$route=$this->getUrlManager()->parseUrl($this->getRequest());
-			
+		 
+	 
+	 
 		//根据 route 参数，调用 controller 信息
 		$this->runController($route);
 	}
@@ -376,6 +377,7 @@ class CWebApplication extends CApplication
 			if(!$caseSensitive)
 				$id=strtolower($id);
 			$route=(string)substr($route,$pos+1);
+		 
 			if(!isset($basePath))  // first segment
 			{
 				if(isset($owner->controllerMap[$id]))
@@ -403,8 +405,7 @@ class CWebApplication extends CApplication
 			
 			//控制器文件位置，注意这里的 $basePath.'/'.$id 是可以为子目录的
 			$classFile=$basePath.DIRECTORY_SEPARATOR.$className.'.php';
-			//echo $classFile;
-			
+		 
 			if(is_file($classFile))
 			{
 				if(!class_exists($className,false))
@@ -430,7 +431,7 @@ class CWebApplication extends CApplication
 	 * @return string action ID
 	 */
 	protected function parseActionParams($pathInfo)
-	{
+	{ 
 		if(($pos=strpos($pathInfo,'/'))!==false)
 		{
 			$manager=$this->getUrlManager();
@@ -599,6 +600,7 @@ class CWebApplication extends CApplication
 	{
 		parent::init();
 		// preload 'request' so that it has chance to respond to onBeginRequest event.
-		$this->getRequest();
+		$request = $this->getRequest();
+	 
 	}
 }
