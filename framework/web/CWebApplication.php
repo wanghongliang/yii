@@ -147,6 +147,7 @@ class CWebApplication extends CApplication
 	 * )
 	 * </pre>
 	 * Defaults to null, meaning catch-all is not effective.
+	 * 所有请求全部指定一个路径的配置数组，常用于关闭站点;
 	 */
 	public $catchAllRequest;
 
@@ -186,6 +187,8 @@ class CWebApplication extends CApplication
 	 * Registers the core application components.
 	 * This method overrides the parent implementation by registering additional core components.
 	 * @see setComponents
+	 * 
+	 * 注册web应用所用到的核心组件;
 	 */
 	protected function registerCoreComponents()
 	{

@@ -31,6 +31,8 @@
  * @version $Id: CAssetManager.php 3449 2011-11-20 20:42:45Z alexander.makarow $
  * @package system.web
  * @since 1.0
+ * 
+ * 主要是管理私有的文件，如js,css等
  */
 class CAssetManager extends CApplicationComponent
 {
