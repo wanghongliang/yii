@@ -26,12 +26,23 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
+
+		'db'=>array(
+			'connectionString' => 'oci:dbname=//192.168.5.6:1521/dzd',
+			'emulatePrepare' => true,
+			'username' => 'dzd',
+			'password' => 'qxsjqxt2049cnweb',
+			'charset' => 'UTF-8',
+			'tablePrefix' => '',
+		),
+		// uncomment the following to use a MySQL database
+		/*	
 		'db'=>array(
 			'connectionString' => 'sqlite:protected/data/blog.db',
 			'tablePrefix' => 'tbl_',
 		),
-		// uncomment the following to use a MySQL database
-		/*
+				
+
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=blog',
 			'emulatePrepare' => true,
