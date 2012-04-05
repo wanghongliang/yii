@@ -67,19 +67,22 @@ abstract class CActiveRecord extends CModel
 	/**
 	 * Constructor.
 	 * @param string $scenario scenario name. See {@link CModel::scenario} for more details about this parameter.
+	 * scenario 场景
 	 */
 	public function __construct($scenario='insert')
 	{
-		if($scenario===null) // internally used by populateRecord() and model()
+		//internally 内部的
+		if($scenario===null) // internally used by populateRecord() and model()  
 			return;
 
-		$this->setScenario($scenario);
+		
+		$this->setScenario($scenario); //
 		$this->setIsNewRecord(true);
 		$this->_attributes=$this->getMetaData()->attributeDefaults;
 
 		$this->init();
 
-		$this->attachBehaviors($this->behaviors());
+		$this->attachBehaviors($this->behaviors()); //behaviors 行为，举止
 		$this->afterConstruct();
 	}
 
