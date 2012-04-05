@@ -142,6 +142,8 @@ class PostController extends Controller
 	public function actionAdmin()
 	{
 		$model=new Post('search');
+		
+		//print_r( $model );
 		if(isset($_GET['Post']))
 			$model->attributes=$_GET['Post'];
 		$this->render('admin',array(

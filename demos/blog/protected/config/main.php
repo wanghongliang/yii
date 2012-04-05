@@ -26,7 +26,7 @@ return array(
 			// enable cookie-based authentication
 			'allowAutoLogin'=>true,
 		),
-
+		/**
 		'db'=>array(
 			'connectionString' => 'oci:dbname=//192.168.5.6:1521/dzd',
 			'emulatePrepare' => true,
@@ -35,13 +35,16 @@ return array(
 			'charset' => 'UTF-8',
 			'tablePrefix' => '',
 		),
+		
+		**/
+		
 		// uncomment the following to use a MySQL database
-		/*	
+			
 		'db'=>array(
 			'connectionString' => 'sqlite:protected/data/blog.db',
 			'tablePrefix' => 'tbl_',
 		),
-				
+		/*		
 
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=blog',
