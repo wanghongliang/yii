@@ -96,12 +96,24 @@ class Orderfrc extends CActiveRecord
 	{
 		$criteria=new CDbCriteria;
 		
+		$request = Yii::app()->getRequest();
+		
+		
+		//echo $request->getParam('sd');
+		
 		$order_no_value = iconv("UTF-8","GB2312",$_GET[__CLASS__]['order_no']);
 		$user_name_value =  iconv("UTF-8","GB2312",$_GET[__CLASS__]['user_name']);
 		
   		$criteria->compare('order_no',$order_no_value,true);
 		$criteria->compare('user.user_name',$user_name_value,true);
+		
+		
+		
+		
+		//表关联查询
 		$criteria->with=array('user'=>array('select'=>'user_name'));
+		
+		//主表选择的列信息
 		$criteria->select=array('id','order_no' ,'amount','integral','mobile','created');
 		 
 		if( $_GET['sd']!='' && $_GET['ed']!='' ){
@@ -111,8 +123,8 @@ class Orderfrc extends CActiveRecord
 			$ed =  explode('-',$_GET['ed']);
 			$ed_time = mktime(0,0,0,$ed[1],$ed[2],$ed[0]); 
  
-
-			$criteria->addCondition('t.created between '.$sd_time.' and '.$ed_time );
+			$criteria->addBetweenCondition('created',$sd_time,$ed_time);
+			//$criteria->addCondition('t.created between '.$sd_time.' and '.$ed_time );
 		}
 
 		 return new CActiveDataProvider('Orderfrc', array(

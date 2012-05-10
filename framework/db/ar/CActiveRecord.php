@@ -1294,9 +1294,7 @@ abstract class CActiveRecord extends CModel
 		}
 		else
 		{
-			$finder=new CActiveFinder($this,$criteria->with);
-			
- 
+			$finder=new CActiveFinder($this,$criteria->with); 
 			return $finder->query($criteria,$all);
 		}
 	}
