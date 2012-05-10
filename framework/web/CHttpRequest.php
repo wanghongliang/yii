@@ -106,6 +106,7 @@ class CHttpRequest extends CApplicationComponent
 	{
 		parent::init();
 		$this->normalizeRequest();
+		header('Content-Type: text/html;charset=GB2312');
 	}
 
 	/**

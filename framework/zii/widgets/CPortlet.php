@@ -122,5 +122,6 @@ class CPortlet extends CWidget
 	 */
 	protected function renderContent()
 	{
+		
 	}
 }

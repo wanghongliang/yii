@@ -89,7 +89,13 @@ abstract class CBaseController extends CComponent
 	 */
 	public function renderFile($viewFile,$data=null,$return=false)
 	{
+		static $i=0;
+		if( $i++==2 ){
+			//debug();
+		}
 		$widgetCount=count($this->_widgetStack);
+		
+		//Yii::app()->getViewRenderer() 返回为空目前ViewRenderer类为抽象类
 		if(($renderer=Yii::app()->getViewRenderer())!==null && $renderer->fileExtension==='.'.CFileHelper::getExtension($viewFile))
 			$content=$renderer->renderFile($this,$viewFile,$data,$return);
 		else

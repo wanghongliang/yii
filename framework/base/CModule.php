@@ -387,6 +387,8 @@ abstract class CModule extends CComponent
 			{
 				Yii::trace("Loading \"$id\" application component",'system.CModule');
 				unset($config['enabled']);
+				
+	 
 				$component=Yii::createComponent($config);
 				$component->init();
 				return $this->_components[$id]=$component;

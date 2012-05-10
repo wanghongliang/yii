@@ -85,12 +85,12 @@ abstract class CApplication extends CModule
 	/**
 	 * @var string the charset currently used for the application. Defaults to 'UTF-8'.
 	 */
-	public $charset='UTF-8';
+	public $charset='gb2312';
 	/**
 	 * @var string the language that the application is written in. This mainly refers to
 	 * the language that the messages and view files are in. Defaults to 'en_us' (US English).
 	 */
-	public $sourceLanguage='en_us';
+	public $sourceLanguage='zh_cn';
 
 	private $_id;
 	private $_basePath;
@@ -150,7 +150,7 @@ abstract class CApplication extends CModule
 		$this->attachBehaviors($this->behaviors);
 		$this->preloadComponents();
 
-		$this->init();
+		$this->init(); 
 	}
 
 

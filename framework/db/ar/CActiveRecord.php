@@ -76,14 +76,15 @@ abstract class CActiveRecord extends CModel
 			return;
 
 		
-		$this->setScenario($scenario); //
-		$this->setIsNewRecord(true);
-		$this->_attributes=$this->getMetaData()->attributeDefaults;
-
-		$this->init();
+		$this->setScenario($scenario); //设置场景
+		$this->setIsNewRecord(true); //新操作记录
+		
+		  
+		$this->_attributes=$this->getMetaData()->attributeDefaults;	//设置属性
+		$this->init(); //初始化
 
 		$this->attachBehaviors($this->behaviors()); //behaviors 行为，举止
-		$this->afterConstruct();
+		$this->afterConstruct();  //构造方法后的事件
 	}
 
 	/**
@@ -108,6 +109,8 @@ abstract class CActiveRecord extends CModel
 	 * meaning that the next SQL query will be cached.
 	 * @return CActiveRecord the active record instance itself.
 	 * @since 1.1.7
+	 * 
+	 * duration 持续
 	 */
 	public function cache($duration, $dependency=null, $queryCount=1)
 	{
@@ -1404,8 +1407,11 @@ abstract class CActiveRecord extends CModel
 	 */
 	public function findAll($condition='',$params=array())
 	{
+ 
 		Yii::trace(get_class($this).'.findAll()','system.db.ar.CActiveRecord');
 		$criteria=$this->getCommandBuilder()->createCriteria($condition,$params);
+		
+	 
 		return $this->query($criteria,true);
 	}
 
@@ -2238,21 +2244,22 @@ class CActiveRecordMetaData
 	/**
 	 * @var CDbTableSchema the table schema information
 	 */
-	public $tableSchema;
+	public $tableSchema;	//表 schema 信息 schema 概要
 	/**
 	 * @var array table columns
 	 */
-	public $columns;
+	public $columns;	 //表的列信息
 	/**
-	 * @var array list of relations
+	 * @var array list of relations  关系
 	 */
-	public $relations=array();
+	public $relations=array();  
+	
 	/**
-	 * @var array attribute default values
+	 * @var array attribute default values //属性默认值
 	 */
 	public $attributeDefaults=array();
 
-	private $_model;
+	private $_model; //模型类
 
 	/**
 	 * Constructor.
@@ -2266,9 +2273,14 @@ class CActiveRecordMetaData
 		if(($table=$model->getDbConnection()->getSchema()->getTable($tableName))===null)
 			throw new CDbException(Yii::t('yii','The table "{table}" for active record class "{class}" cannot be found in the database.',
 				array('{class}'=>get_class($model),'{table}'=>$tableName)));
+				
+		//主键为空
 		if($table->primaryKey===null)
 		{
+			//从模型类中找主键
 			$table->primaryKey=$model->primaryKey();
+			
+			//设置主键信息
 			if(is_string($table->primaryKey) && isset($table->columns[$table->primaryKey]))
 				$table->columns[$table->primaryKey]->isPrimaryKey=true;
 			else if(is_array($table->primaryKey))
@@ -2288,7 +2300,9 @@ class CActiveRecordMetaData
 			if(!$column->isPrimaryKey && $column->defaultValue!==null)
 				$this->attributeDefaults[$name]=$column->defaultValue;
 		}
-
+		
+		
+		//相关联的表信息
 		foreach($model->relations() as $name=>$config)
 		{
 			$this->addRelation($name,$config);

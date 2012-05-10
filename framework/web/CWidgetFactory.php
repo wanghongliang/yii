@@ -149,6 +149,7 @@ class CWidgetFactory extends CApplicationComponent implements IWidgetFactory
 
 		if(isset($this->widgets[$className]))
 			$properties=$properties===array() ? $this->widgets[$className] : CMap::mergeArray($this->widgets[$className],$properties);
+			
 		if($this->enableSkin)
 		{
 			if($this->skinnableWidgets===null || in_array($className,$this->skinnableWidgets))

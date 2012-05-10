@@ -10,7 +10,7 @@
 
 /**
  * CDbCriteria represents a query criteria, such as conditions, ordering by, limit/offset.
- *
+ * CDbCriteria 代表一个查询标准,如，条件，排序，和限制参数
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @version $Id: CDbCriteria.php 3515 2011-12-28 12:29:24Z mdomba $
  * @package system.db.schema
@@ -18,7 +18,7 @@
  */
 class CDbCriteria extends CComponent
 {
-	const PARAM_PREFIX=':ycp';
+	const PARAM_PREFIX=':ycp'; 
 	/**
 	 * @var integer the global counter for anonymous binding parameters.
 	 * This counter is used for generating the name for the anonymous parameters.
@@ -29,22 +29,22 @@ class CDbCriteria extends CComponent
 	 * statement. The property can be either a string (column names separated by commas)
 	 * or an array of column names. Defaults to '*', meaning all columns.
 	 */
-	public $select='*';
+	public $select='*'; //代表需要查询的列信息
 	/**
 	 * @var boolean whether to select distinct rows of data only. If this is set true,
 	 * the SELECT clause would be changed to SELECT DISTINCT.
 	 */
-	public $distinct=false;
+	public $distinct=false;  //是否只选择不行数据的行
 	/**
 	 * @var string query condition. This refers to the WHERE clause in an SQL statement.
 	 * For example, <code>age>31 AND team=1</code>.
 	 */
-	public $condition='';
+	public $condition=''; //查询条件
 	/**
 	 * @var array list of query parameter values indexed by parameter placeholders.
 	 * For example, <code>array(':name'=>'Dan', ':age'=>31)</code>.
 	 */
-	public $params=array();
+	public $params=array(); //查询条件的占位符,会替换成查询条件中的变量
 	/**
 	 * @var integer maximum number of records to be returned. If less than 0, it means no limit.
 	 */
@@ -52,7 +52,7 @@ class CDbCriteria extends CComponent
 	/**
 	 * @var integer zero-based offset from where the records are to be returned. If less than 0, it means starting from the beginning.
 	 */
-	public $offset=-1;
+	public $offset=-1;	
 	/**
 	 * @var string how to sort the query results. This refers to the ORDER BY clause in an SQL statement.
 	 */
@@ -72,6 +72,7 @@ class CDbCriteria extends CComponent
 	 * For example, <code>'SUM(revenue)<50000'</code>.
 	 */
 	public $having='';
+	
 	/**
 	 * @var mixed the relational query criteria. This is used for fetching related objects in eager loading fashion.
 	 * This property is effective only when the criteria is passed as a parameter to the following methods of CActiveRecord:
@@ -182,6 +183,8 @@ class CDbCriteria extends CComponent
 	 * @param mixed $condition the new condition. It can be either a string or an array of strings.
 	 * @param string $operator the operator to join different conditions. Defaults to 'AND'.
 	 * @return CDbCriteria the criteria object itself
+	 * 
+	 * 加条件信息
 	 */
 	public function addCondition($condition,$operator='AND')
 	{
@@ -215,6 +218,8 @@ class CDbCriteria extends CComponent
 	 * Defaults to 'AND'.
 	 * @param string $like the LIKE operator. Defaults to 'LIKE'. You may also set this to be 'NOT LIKE'.
 	 * @return CDbCriteria the criteria object itself
+	 * 
+	 * 加搜索条件
 	 */
 	public function addSearchCondition($column,$keyword,$escape=true,$operator='AND',$like='LIKE')
 	{
@@ -238,6 +243,7 @@ class CDbCriteria extends CComponent
 	 * @param string $operator the operator used to concatenate the new condition with the existing one.
 	 * Defaults to 'AND'.
 	 * @return CDbCriteria the criteria object itself
+	 * 添加IN条件
 	 */
 	public function addInCondition($column,$values,$operator='AND')
 	{
@@ -312,6 +318,7 @@ class CDbCriteria extends CComponent
 	 * @param string $operator the operator used to concatenate the new condition with the existing one.
 	 * Defaults to 'AND'.
 	 * @return CDbCriteria the criteria object itself
+	 * 以数组方式添加列的条件
 	 */
 	public function addColumnCondition($columns,$columnOperator='AND',$operator='AND')
 	{

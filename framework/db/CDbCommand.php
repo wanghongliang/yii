@@ -323,6 +323,8 @@ class CDbCommand extends CComponent
 		}
 		else
 			$par='';
+			
+	 
 		Yii::trace('Executing SQL: '.$this->getText().$par,'system.db.CDbCommand');
 		try
 		{
@@ -497,7 +499,14 @@ class CDbCommand extends CComponent
 				$this->_statement->execute();
 			else
 				$this->_statement->execute($params);
-
+			
+			
+		//echo "<br/>\n";
+		//print_r( $params );
+		//print_r( $this->_statement );
+		//echo $this->getText().$par;
+		//echo "<br/>\n";
+		 
 			if($method==='')
 				$result=new CDbDataReader($this);
 			else

@@ -86,7 +86,7 @@ class CActiveFinder extends CComponent
 			$result = reset($this->_joinTree->records);
 		else
 			$result = null;
-
+  
 		$this->destroyJoinTree();
 		return $result;
 	}

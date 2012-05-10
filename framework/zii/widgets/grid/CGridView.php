@@ -297,10 +297,13 @@ class CGridView extends CBaseListView
 			{
 				// use the keys of the first row of data as the default columns
 				$data=$this->dataProvider->getData();
+				
+			
 				if(isset($data[0]) && is_array($data[0]))
 					$this->columns=array_keys($data[0]);
 			}
 		}
+ 
 		$id=$this->getId();
 		foreach($this->columns as $i=>$column)
 		{

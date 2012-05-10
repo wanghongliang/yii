@@ -53,7 +53,7 @@ class CFormatter extends CApplicationComponent
 	/**
 	 * @var string the format string to be used to format a date using PHP date() function. Defaults to 'Y/m/d'.
 	 */
-	public $dateFormat='Y/m/d';
+	public $dateFormat='Y-m-d';
 	/**
 	 * @var string the format string to be used to format a time using PHP date() function. Defaults to 'h:i:s A'.
 	 */
@@ -61,7 +61,7 @@ class CFormatter extends CApplicationComponent
 	/**
 	 * @var string the format string to be used to format a date and time using PHP date() function. Defaults to 'Y/m/d h:i:s A'.
 	 */
-	public $datetimeFormat='Y/m/d h:i:s A';
+	public $datetimeFormat='Y-m-d H:i:s';
 	/**
 	 * @var array the format used to format a number with PHP number_format() function.
 	 * Three elements may be specified: "decimals", "decimalSeparator" and "thousandSeparator". They

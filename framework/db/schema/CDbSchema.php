@@ -76,11 +76,14 @@ abstract class CDbSchema extends CComponent
 			return $this->_tables[$name];
 		else
 		{
+			
+			//第一步，加表前缀
 			if($this->_connection->tablePrefix!==null && strpos($name,'{{')!==false)
 				$realName=preg_replace('/\{\{(.*?)\}\}/',$this->_connection->tablePrefix.'$1',$name);
 			else
 				$realName=$name;
-
+				
+			//数据库连接信息
 			// temporarily disable query caching
 			if($this->_connection->queryCachingDuration>0)
 			{
@@ -88,6 +91,7 @@ abstract class CDbSchema extends CComponent
 				$this->_connection->queryCachingDuration=0;
 			}
 
+			//表名称是否已缓存
 			if(!isset($this->_cacheExclude[$name]) && ($duration=$this->_connection->schemaCachingDuration)>0 && $this->_connection->schemaCacheID!==false && ($cache=Yii::app()->getComponent($this->_connection->schemaCacheID))!==null)
 			{
 				$key='yii:dbschema'.$this->_connection->connectionString.':'.$this->_connection->username.':'.$name;
@@ -103,6 +107,8 @@ abstract class CDbSchema extends CComponent
 			else
 				$this->_tables[$name]=$table=$this->loadTable($realName);
 
+
+			//重新加载缓存的数据库连接信息
 			if(isset($qcDuration))  // re-enable query caching
 				$this->_connection->queryCachingDuration=$qcDuration;
 

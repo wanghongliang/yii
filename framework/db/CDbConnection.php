@@ -412,12 +412,15 @@ class CDbConnection extends CApplicationComponent
 	protected function createPdoInstance()
 	{
 		$pdoClass=$this->pdoClass;
+
 		if(($pos=strpos($this->connectionString,':'))!==false)
 		{
 			$driver=strtolower(substr($this->connectionString,0,$pos));
 			if($driver==='mssql' || $driver==='dblib' || $driver==='sqlsrv')
 				$pdoClass='CMssqlPdoAdapter';
 		}
+				
+ 
 		return new $pdoClass($this->connectionString,$this->username,
 									$this->password,$this->_attributes);
 	}
@@ -430,12 +433,15 @@ class CDbConnection extends CApplicationComponent
 	 */
 	protected function initConnection($pdo)
 	{
+		//设置异常处理
 		$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		if($this->emulatePrepare!==null && constant('PDO::ATTR_EMULATE_PREPARES'))
 			$pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES,$this->emulatePrepare);
+			
+		//设置连接字符集
 		if($this->charset!==null)
 		{
-			$driver=strtolower($pdo->getAttribute(PDO::ATTR_DRIVER_NAME));
+			$driver=strtolower($pdo->getAttribute(PDO::ATTR_DRIVER_NAME) );
 			if(in_array($driver,array('pgsql','mysql','mysqli')))
 				$pdo->exec('SET NAMES '.$pdo->quote($this->charset));
 		}

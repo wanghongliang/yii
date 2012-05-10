@@ -93,6 +93,8 @@ abstract class CBaseListView extends CWidget
 	 */
 	public $loadingCssClass='loading';
 
+
+	public $filterStr = '';
 	/**
 	 * Initializes the view.
 	 * This method will initialize required property values and instantiate {@link columns} objects.
@@ -102,12 +104,17 @@ abstract class CBaseListView extends CWidget
 		if($this->dataProvider===null)
 			throw new CException(Yii::t('zii','The "dataProvider" property cannot be empty.'));
 
+		//调用->fetchData();,并返回
 		$this->dataProvider->getData();
 
+		//自动生成一个ID信息
 		$this->htmlOptions['id']=$this->getId();
 
+
+		
 		if($this->enableSorting && $this->dataProvider->getSort()===false)
 			$this->enableSorting=false;
+			
 		if($this->enablePagination && $this->dataProvider->getPagination()===false)
 			$this->enablePagination=false;
 	}
@@ -137,6 +144,8 @@ abstract class CBaseListView extends CWidget
 	 */
 	public function renderContent()
 	{
+		
+	 
 		ob_start();
 		echo preg_replace_callback("/{(\w+)}/",array($this,'renderSection'),$this->template);
 		ob_end_flush();
@@ -152,6 +161,7 @@ abstract class CBaseListView extends CWidget
 	 */
 	protected function renderSection($matches)
 	{
+	 
 		$method='render'.$matches[1];
 		if(method_exists($this,$method))
 		{
@@ -193,10 +203,12 @@ abstract class CBaseListView extends CWidget
 	 */
 	public function renderSummary()
 	{
-		if(($count=$this->dataProvider->getItemCount())<=0)
-			return;
+		//if(($count=$this->dataProvider->getItemCount())<=0)
+		//	return;
 
 		echo '<div class="'.$this->summaryCssClass.'">';
+		
+		echo $this->filterStr;
 		if($this->enablePagination)
 		{
 			if(($summaryText=$this->summaryText)===null)

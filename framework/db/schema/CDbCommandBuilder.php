@@ -219,6 +219,7 @@ class CDbCommandBuilder extends CComponent
 				$placeholders[]='NULL';
 			}
 		}
+		
 		$sql="INSERT INTO {$table->rawName} (".implode(', ',$fields).') VALUES ('.implode(', ',$placeholders).')';
 		$command=$this->_connection->createCommand($sql);
 

@@ -189,6 +189,8 @@ class CClientScript extends CApplicationComponent
 	 */
 	public function render(&$output)
 	{
+		
+		
 		if(!$this->hasScripts)
 			return;
 
@@ -204,7 +206,7 @@ class CClientScript extends CApplicationComponent
 		{
 			$this->renderBodyBegin($output);
 			$this->renderBodyEnd($output);
-		}
+		} 
 	}
 
 	/**
@@ -428,7 +430,7 @@ class CClientScript extends CApplicationComponent
 		}
 		if(!empty($scripts))
 			$html.=CHtml::script(implode("\n",$scripts))."\n";
-
+	 
 		if($fullPage)
 			$output=str_replace('<###end###>',$html,$output);
 		else

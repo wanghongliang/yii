@@ -269,7 +269,7 @@ class CHtml
 	 */
 	public static function script($text)
 	{
-		return "<script type=\"text/javascript\">\n/*<![CDATA[*/\n{$text}\n/*]]>*/\n</script>";
+		return "<script type=\"text/javascript\">\n \n{$text}\n \n</script>";
 	}
 
 	/**

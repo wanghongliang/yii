@@ -1,0 +1,59 @@
+2012/03/29 03:54:23 [error] [exception.CDbException] exception 'CDbException' with message 'CDbConnection failed to open the DB connection: SQLSTATE[HY000]: pdo_oci_handle_factory: ORA-12170: TNS:Connect timeout occurred
+ (ext\pdo_oci\oci_driver.c:579)' in C:\Documents and Settings\Administrator\git\yii\framework\db\CDbConnection.php:382
+Stack trace:
+#0 C:\Documents and Settings\Administrator\git\yii\framework\db\CDbConnection.php(331): CDbConnection->open()
+#1 C:\Documents and Settings\Administrator\git\yii\framework\db\CDbConnection.php(309): CDbConnection->setActive(true)
+#2 C:\Documents and Settings\Administrator\git\yii\framework\base\CModule.php(391): CDbConnection->init()
+#3 C:\Documents and Settings\Administrator\git\yii\framework\base\CApplication.php(440): CModule->getComponent('db')
+#4 C:\Documents and Settings\Administrator\git\yii\framework\db\ar\CActiveRecord.php(615): CApplication->getDb()
+#5 C:\Documents and Settings\Administrator\git\yii\framework\db\ar\CActiveRecord.php(2263): CActiveRecord->getDbConnection()
+#6 C:\Documents and Settings\Administrator\git\yii\framework\db\ar\CActiveRecord.php(379): CActiveRecordMetaData->__construct(Object(Post))
+#7 C:\Documents and Settings\Administrator\git\yii\framework\web\CActiveDataProvider.php(75): CActiveRecord::model('Post')
+#8 C:\Documents and Settings\Administrator\git\yii\demos\blog\protected\controllers\PostController.php(132): CActiveDataProvider->__construct('Post', Array)
+#9 C:\Documents and Settings\Administrator\git\yii\framework\web\actions\CInlineAction.php(50): PostController->actionIndex()
+#10 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#11 C:\Documents and Settings\Administrator\git\yii\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#12 C:\Documents and Settings\Administrator\git\yii\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#13 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#14 C:\Documents and Settings\Administrator\git\yii\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#15 C:\Documents and Settings\Administrator\git\yii\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#16 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(292): CFilterChain->run()
+#17 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#18 C:\Documents and Settings\Administrator\git\yii\framework\web\CWebApplication.php(329): CController->run('')
+#19 C:\Documents and Settings\Administrator\git\yii\framework\web\CWebApplication.php(183): CWebApplication->runController('')
+#20 C:\Documents and Settings\Administrator\git\yii\framework\base\CApplication.php(169): CWebApplication->processRequest()
+#21 C:\Documents and Settings\Administrator\git\yii\demos\blog\index.php(21): CApplication->run()
+#22 {main}
+REQUEST_URI=/demos/blog/
+HTTP_REFERER=http://localhost:9033/demos/
+---
+2012/03/29 03:55:38 [error] [exception.CException] exception 'CException' with message 'CAssetManager.basePath "C:\Documents and Settings\Administrator\git\yii\demos\blog\assets" is invalid. Please make sure the directory exists and is writable by the Web server process.' in C:\Documents and Settings\Administrator\git\yii\framework\web\CAssetManager.php:118
+Stack trace:
+#0 C:\Documents and Settings\Administrator\git\yii\framework\web\CAssetManager.php(103): CAssetManager->setBasePath('C:\Documents an...')
+#1 C:\Documents and Settings\Administrator\git\yii\framework\web\CAssetManager.php(221): CAssetManager->getBasePath()
+#2 C:\Documents and Settings\Administrator\git\yii\framework\zii\widgets\CListView.php(179): CAssetManager->publish('C:\Documents an...')
+#3 C:\Documents and Settings\Administrator\git\yii\framework\web\CBaseController.php(150): CListView->init()
+#4 C:\Documents and Settings\Administrator\git\yii\framework\web\CBaseController.php(175): CBaseController->createWidget('zii.widgets.CLi...', Array)
+#5 C:\Documents and Settings\Administrator\git\yii\demos\blog\protected\views\post\index.php(9): CBaseController->widget('zii.widgets.CLi...', Array)
+#6 C:\Documents and Settings\Administrator\git\yii\framework\web\CBaseController.php(129): require('C:\Documents an...')
+#7 C:\Documents and Settings\Administrator\git\yii\framework\web\CBaseController.php(96): CBaseController->renderInternal('C:\Documents an...', Array, true)
+#8 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(870): CBaseController->renderFile('C:\Documents an...', Array, true)
+#9 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(783): CController->renderPartial('index', Array, true)
+#10 C:\Documents and Settings\Administrator\git\yii\demos\blog\protected\controllers\PostController.php(136): CController->render('index', Array)
+#11 C:\Documents and Settings\Administrator\git\yii\framework\web\actions\CInlineAction.php(50): PostController->actionIndex()
+#12 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#13 C:\Documents and Settings\Administrator\git\yii\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#14 C:\Documents and Settings\Administrator\git\yii\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#15 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#16 C:\Documents and Settings\Administrator\git\yii\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#17 C:\Documents and Settings\Administrator\git\yii\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#18 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(292): CFilterChain->run()
+#19 C:\Documents and Settings\Administrator\git\yii\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#20 C:\Documents and Settings\Administrator\git\yii\framework\web\CWebApplication.php(329): CController->run('')
+#21 C:\Documents and Settings\Administrator\git\yii\framework\web\CWebApplication.php(183): CWebApplication->runController('')
+#22 C:\Documents and Settings\Administrator\git\yii\framework\base\CApplication.php(169): CWebApplication->processRequest()
+#23 C:\Documents and Settings\Administrator\git\yii\demos\blog\index.php(21): CApplication->run()
+#24 {main}
+REQUEST_URI=/demos/blog/
+HTTP_REFERER=http://localhost:9033/demos/
+---

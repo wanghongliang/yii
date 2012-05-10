@@ -150,6 +150,7 @@ class CWebService extends CComponent
 	 */
 	public function run()
 	{
+ 
 		header('Content-Type: text/xml;charset='.$this->encoding);
 		if(YII_DEBUG)
 			ini_set("soap.wsdl_cache_enabled",0);
