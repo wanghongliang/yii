@@ -192,6 +192,8 @@ class CActiveFinder extends CComponent
 			throw new CDbException(Yii::t('yii','The STAT relation "{name}" cannot have child relations.',
 				array('{name}'=>$parent->relation->name)));
 
+
+ 
 		if(is_string($with))
 		{
 			if(($pos=strrpos($with,'.'))!==false)
@@ -278,7 +280,8 @@ class CActiveFinder extends CComponent
 
 			if($relation instanceof CActiveRelation)
 				$model->setTableAlias($oldAlias);
-
+			
+			 
 			if($relation instanceof CStatRelation)
 				return new CStatElement($this,$relation,$parent);
 			else
@@ -446,9 +449,13 @@ class CJoinElement
 		if($this->_parent===null) // root element
 		{
 			$query=new CJoinQuery($this,$criteria);
+			
+ 	
 			$this->_finder->baseLimited=($criteria->offset>=0 || $criteria->limit>=0);
 			$this->buildQuery($query);
 			$this->_finder->baseLimited=false;
+			
+	 
 			$this->runQuery($query);
 		}
 		else if(!$this->_joined && !empty($this->_parent->records)) // not joined before
@@ -1296,6 +1303,8 @@ class CJoinQuery
 			$this->join($element->slave);
 		if(!empty($element->relation->select))
 			$this->selects[]=$element->getColumnSelect($element->relation->select);
+			
+			 
 		$this->conditions[]=$element->relation->condition;
 		$this->orders[]=$element->relation->order;
 		$this->joins[]=$element->getJoinCondition();
@@ -1331,7 +1340,7 @@ class CJoinQuery
 			$sql.=' WHERE (' . implode(') AND (',$conditions).')';
 
 		$groups=array();
-		foreach($this->groups as $group)
+		foreach($this->groups as $group)0
 			if($group!=='')
 				$groups[]=$group;
 		if($groups!==array())

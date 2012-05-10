@@ -80,6 +80,7 @@ class CDbCommandBuilder extends CComponent
 			$alias=$criteria->alias;
 		$alias=$this->_schema->quoteTableName($alias);
 
+	 
 		// issue 1432: need to expand * when SQL has JOIN
 		if($select==='*' && !empty($criteria->join))
 		{

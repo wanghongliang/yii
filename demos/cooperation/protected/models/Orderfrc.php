@@ -101,8 +101,8 @@ class Orderfrc extends CActiveRecord
 		
   		$criteria->compare('order_no',$order_no_value,true);
 		$criteria->compare('user.user_name',$user_name_value,true);
-		$criteria->with=array('user'=>array('user_name'));
-		
+		$criteria->with=array('user'=>array('select'=>'user_name'));
+		$criteria->select=array('id','order_no' ,'amount','integral','mobile','created');
 		 
 		if( $_GET['sd']!='' && $_GET['ed']!='' ){
 			$sd = explode('-',$_GET['sd']);

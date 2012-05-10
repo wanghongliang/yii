@@ -1295,6 +1295,8 @@ abstract class CActiveRecord extends CModel
 		else
 		{
 			$finder=new CActiveFinder($this,$criteria->with);
+			
+ 
 			return $finder->query($criteria,$all);
 		}
 	}
@@ -1410,8 +1412,7 @@ abstract class CActiveRecord extends CModel
  
 		Yii::trace(get_class($this).'.findAll()','system.db.ar.CActiveRecord');
 		$criteria=$this->getCommandBuilder()->createCriteria($condition,$params);
-		
-	 
+
 		return $this->query($criteria,true);
 	}
 
